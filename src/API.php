@@ -1,10 +1,15 @@
 <?php
 namespace Audeio\Spotify;
 
+use Audeio\Spotify\Entity\PlaylistCollection;
 use Audeio\Spotify\Entity\User;
+use Audeio\Spotify\Hydrator\ImageAwareHydrator;
+use Audeio\Spotify\Hydrator\PlaylistCollectionHydrator;
+use Audeio\Spotify\Hydrator\UserHydrator;
 use Audeio\Spotify\Oauth2\Client\Provider\Spotify;
 use GuzzleHttp;
 use League\OAuth2\Client\Grant\RefreshToken;
+use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 class API
@@ -55,9 +60,27 @@ class API
     {
         $response = $this->sendRequest($this->guzzleClient->createRequest('GET', '/v1/me'))->json();
 
-        $hydrator = new ClassMethods();
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new UserHydrator());
+        $hydrators->add(new ImageAwareHydrator());
 
-        return $hydrator->hydrate($response, new User());
+        return $hydrators->hydrate($response, new User());
+    }
+
+    /**
+     * @param $username
+     * @return PlaylistCollection
+     */
+    public function getUserPlaylists($username)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists', $username))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new PlaylistCollectionHydrator());
+
+        return $hydrators->hydrate($response, new PlaylistCollection());
     }
 
     private function sendRequest(GuzzleHttp\Message\RequestInterface $request)

@@ -1,7 +1,9 @@
 <?php
 namespace Audeio\Spotify\Entity;
 
-class Image
+use Zend\Stdlib\AbstractOptions;
+
+class Image extends AbstractOptions
 {
 
     /**
@@ -12,7 +14,7 @@ class Image
     /**
      * @var string
      */
-    private $uri;
+    private $url;
 
     /**
      * @var int
@@ -38,17 +40,17 @@ class Image
     /**
      * @return string
      */
-    public function getUri()
+    public function getUrl()
     {
-        return $this->uri;
+        return $this->url;
     }
 
     /**
-     * @param string $uri
+     * @param string $url
      */
-    public function setUri($uri)
+    public function setUrl($url)
     {
-        $this->uri = $uri;
+        $this->url = $url;
     }
 
     /**

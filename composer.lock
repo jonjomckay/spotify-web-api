@@ -4,8 +4,76 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e86c4bc9a61bd49264837c66149c988a",
+    "hash": "c7e59b5e20b9b63372f186aa14ff2687",
     "packages": [
+        {
+            "name": "doctrine/collections",
+            "version": "v1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/collections.git",
+                "reference": "b99c5c46c87126201899afe88ec490a25eedd6a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/b99c5c46c87126201899afe88ec490a25eedd6a2",
+                "reference": "b99c5c46c87126201899afe88ec490a25eedd6a2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Collections\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan H. Wage",
+                    "email": "jonwage@gmail.com",
+                    "homepage": "http://www.jwage.com/",
+                    "role": "Creator"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com",
+                    "homepage": "http://www.instaclick.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Collections Abstraction library",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "array",
+                "collections",
+                "iterator"
+            ],
+            "time": "2014-02-03 23:07:43"
+        },
         {
             "name": "guzzle/guzzle",
             "version": "v3.9.1",
@@ -331,18 +399,59 @@
             "time": "2014-07-08 12:21:33"
         },
         {
+            "name": "zendframework/zend-eventmanager",
+            "version": "2.3.0",
+            "target-dir": "Zend/EventManager",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendEventManager.git",
+                "reference": "048164ee81854942667ffdda3030ce06caa79bb5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendEventManager/zipball/048164ee81854942667ffdda3030ce06caa79bb5",
+                "reference": "048164ee81854942667ffdda3030ce06caa79bb5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\EventManager\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "eventmanager",
+                "zf2"
+            ],
+            "time": "2014-03-14 16:21:05"
+        },
+        {
             "name": "zendframework/zend-filter",
-            "version": "2.3.1",
+            "version": "2.3.0",
             "target-dir": "Zend/Filter",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendFilter.git",
-                "reference": "1889b7aa499beccadac770780a73e1a40e0f8a53"
+                "reference": "95e05d19a6941f93546103af1964995213994a8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendFilter/zipball/1889b7aa499beccadac770780a73e1a40e0f8a53",
-                "reference": "1889b7aa499beccadac770780a73e1a40e0f8a53",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendFilter/zipball/95e05d19a6941f93546103af1964995213994a8b",
+                "reference": "95e05d19a6941f93546103af1964995213994a8b",
                 "shasum": ""
             },
             "require": {
@@ -363,8 +472,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev",
-                    "dev-develop": "2.4-dev"
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
                 }
             },
             "autoload": {
@@ -381,21 +490,67 @@
                 "filter",
                 "zf2"
             ],
-            "time": "2014-04-15 15:28:47"
+            "time": "2014-03-14 16:21:18"
+        },
+        {
+            "name": "zendframework/zend-servicemanager",
+            "version": "2.3.1",
+            "target-dir": "Zend/ServiceManager",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendServiceManager.git",
+                "reference": "652ab6e142b7afd1eede8f0f33b47d2599786c84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendServiceManager/zipball/652ab6e142b7afd1eede8f0f33b47d2599786c84",
+                "reference": "652ab6e142b7afd1eede8f0f33b47d2599786c84",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23"
+            },
+            "require-dev": {
+                "zendframework/zend-di": "self.version"
+            },
+            "suggest": {
+                "zendframework/zend-di": "Zend\\Di component"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\ServiceManager\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "servicemanager",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:28:43"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.3.1",
+            "version": "2.3.0",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "c1f4830018b5d4f034d32fa01a9e17ea176f56f6"
+                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/c1f4830018b5d4f034d32fa01a9e17ea176f56f6",
-                "reference": "c1f4830018b5d4f034d32fa01a9e17ea176f56f6",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/d1c481b8a43f2f079b16d3567960ba539e9dacaa",
+                "reference": "d1c481b8a43f2f079b16d3567960ba539e9dacaa",
                 "shasum": ""
             },
             "require": {
@@ -414,8 +569,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3-dev",
-                    "dev-develop": "2.4-dev"
+                    "dev-master": "2.2-dev",
+                    "dev-develop": "2.3-dev"
                 }
             },
             "autoload": {
@@ -431,7 +586,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2014-04-15 15:28:48"
+            "time": "2014-03-14 16:22:22"
         }
     ],
     "packages-dev": [
