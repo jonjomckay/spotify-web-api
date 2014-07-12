@@ -18,11 +18,6 @@ class API
     private $guzzleClient;
 
     /**
-     * @var Spotify
-     */
-    private $provider;
-
-    /**
      * @var string
      */
     private $accessToken;
@@ -32,9 +27,8 @@ class API
      */
     private $refreshToken;
 
-    public function __construct(Spotify $provider, $accessToken, $refreshToken)
+    public function __construct($accessToken, $refreshToken)
     {
-        $this->provider = $provider;
         $this->accessToken = $accessToken;
         $this->refreshToken = $refreshToken;
 
@@ -68,27 +62,27 @@ class API
         try {
             return $this->guzzleClient->send($request);
         } catch (GuzzleHttp\Exception\ClientException $e) {
-            switch ($e->getCode()) {
-                case 401:
-                    $accessToken = $this->provider->getAccessToken(new RefreshToken(), array(
-                        'refresh_token' => $this->refreshToken
-                    ));
-
-                    $this->setAccessToken($accessToken->accessToken);
-
-                    // Need to manipulate the $request object with the new access token...
-
-                    var_dump($accessToken->accessToken);
-                    var_dump($request);
-
-                    return $this->guzzleClient->send($request);
-
-                    break;
-                default:
+//            switch ($e->getCode()) {
+//                case 401:
+//                    $accessToken = $this->provider->getAccessToken(new RefreshToken(), array(
+//                        'refresh_token' => $this->refreshToken
+//                    ));
+//
+//                    $this->setAccessToken($accessToken->accessToken);
+//
+//                    // Need to manipulate the $request object with the new access token...
+//
+//                    var_dump($accessToken->accessToken);
+//                    var_dump($request);
+//
+//                    return $this->guzzleClient->send($request);
+//
+//                    break;
+//                default:
                     var_dump($request);
                     var_dump($e->getResponse()->getBody()->__toString());
-                    break;
-            }
+//                    break;
+//            }
         } catch (\Exception $e) {
             var_dump($e);
         }
