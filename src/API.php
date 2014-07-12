@@ -48,6 +48,9 @@ class API
         $this->guzzleClient->setDefaultOption('headers/Authorization', sprintf('Bearer %s', $accessToken));
     }
 
+    /**
+     * @return User
+     */
     public function getCurrentUser()
     {
         $response = $this->sendRequest($this->guzzleClient->createRequest('GET', '/v1/me'))->json();
