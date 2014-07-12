@@ -1,0 +1,22 @@
+{
+    "name": "audeio/spotify-web-api",
+    "description": "PHP library for the Spotify Web API",
+    "license": "MIT",
+    "homepage": "https://github.com/jonjomckay/spotify-web-api",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Audeio\\Spotify\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4",
+        "guzzlehttp/guzzle": "4.*",
+        "league/oauth2-client": "0.*",
+        "zendframework/zend-filter": "2.*",
+        "zendframework/zend-stdlib": "2.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    }
+}

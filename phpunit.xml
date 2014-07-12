@@ -1,0 +1,13 @@
+<phpunit bootstrap="./tests/Bootstrap.php" backupGlobals="false" colors="true" codecoverage="true" haltonfailure="true" haltonerror="true">
+    <testsuite name="SpotifyWebApi">
+        <directory>./tests</directory>
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./tests</directory>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">./vendor</directory>
+        </blacklist>
+    </filter>
+</phpunit>
