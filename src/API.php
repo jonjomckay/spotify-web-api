@@ -27,16 +27,8 @@ class API
      */
     private $accessToken;
 
-    /**
-     * @var string
-     */
-    private $refreshToken;
-
-    public function __construct($accessToken, $refreshToken)
+    public function __construct()
     {
-        $this->accessToken = $accessToken;
-        $this->refreshToken = $refreshToken;
-
         $this->guzzleClient = new GuzzleHttp\Client([
             'base_url' => static::$baseUrl,
             'defaults' => [
@@ -50,7 +42,9 @@ class API
 
     public function setAccessToken($accessToken)
     {
-        $this->guzzleClient->setDefaultOption('headers/Authorization', sprintf('Bearer %s', $accessToken));
+        $this->accessToken = $accessToken;
+
+        $this->guzzleClient->setDefaultOption('headers/Authorization', sprintf('Bearer %s', $this->accessToken));
     }
 
     /**
