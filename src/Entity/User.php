@@ -1,7 +1,9 @@
 <?php
 namespace Audeio\Spotify\Entity;
 
-class User
+use Zend\Stdlib\AbstractOptions;
+
+class User extends AbstractOptions
 {
 
     /**

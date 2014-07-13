@@ -305,7 +305,7 @@ class API
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new UserHydrator());
-        $hydrators->add(new ImageAwareHydrator());
+        $hydrators->add(new ImageCollectionAwareHydrator());
 
         return $hydrators->hydrate($response, new User());
     }
