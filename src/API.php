@@ -281,6 +281,22 @@ class API
     }
 
     /**
+     * @param string $id
+     * @return User
+     */
+    public function getUserProfile($id)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s', $id))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new UserHydrator());
+
+        return $hydrators->hydrate($response, new User());
+    }
+
+    /**
      * @return User
      */
     public function getCurrentUser()
