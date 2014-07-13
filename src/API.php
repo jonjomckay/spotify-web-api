@@ -12,6 +12,7 @@ use Audeio\Spotify\Entity\Track;
 use Audeio\Spotify\Entity\TrackCollection;
 use Audeio\Spotify\Entity\TrackPagination;
 use Audeio\Spotify\Entity\User;
+use Audeio\Spotify\Exception\AccessTokenExpiredException;
 use Audeio\Spotify\Hydrator\AlbumAwareHydrator;
 use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\AlbumHydrator;
@@ -314,31 +315,19 @@ class API
         try {
             return $this->guzzleClient->send($request);
         } catch (GuzzleHttp\Exception\ClientException $e) {
-//            switch ($e->getCode()) {
-//                case 401:
-//                    $accessToken = $this->provider->getAccessToken(new RefreshToken(), array(
-//                        'refresh_token' => $this->refreshToken
-//                    ));
-//
-//                    $this->setAccessToken($accessToken->accessToken);
-//
-//                    // Need to manipulate the $request object with the new access token...
-//
-//                    var_dump($accessToken->accessToken);
-//                    var_dump($request);
-//
-//                    return $this->guzzleClient->send($request);
-//
-//                    break;
-//                default:
-                    var_dump($request);
-                    var_dump($e->getResponse()->getBody()->__toString());
-//                    break;
-//            }
+            switch ($e->getResponse()->getStatusCode()) {
+                case 401:
+                    throw new AccessTokenExpiredException();
+                    break;
+                default:
+                    throw new \Exception('A problem occurred');
+                    break;
+            }
+
         } catch (\Exception $e) {
             var_dump($e);
-        }
 
-        return null;
+            return null;
+        }
     }
 }
