@@ -8,6 +8,8 @@ use League\OAuth2\Client\Token\AccessToken;
 class Spotify extends IdentityProvider
 {
 
+    public $scopeSeparator = ' ';
+
     public function urlAuthorize()
     {
         return 'https://accounts.spotify.com/authorize';
