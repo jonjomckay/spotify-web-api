@@ -260,6 +260,26 @@ class API
     }
 
     /**
+     * @param array $ids
+     * @return TrackCollection
+     */
+    public function getTracks(array $ids)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', '/v1/tracks', array(
+                'query' => array(
+                    'ids' => implode(',', $ids)
+                )
+            ))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new TrackCollectionHydrator());
+
+        return $hydrators->hydrate($response, new TrackCollection());
+    }
+
+    /**
      * @return User
      */
     public function getCurrentUser()
