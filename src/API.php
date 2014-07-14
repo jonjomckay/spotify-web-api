@@ -1,39 +1,9 @@
 <?php
 namespace Audeio\Spotify;
 
-use Audeio\Spotify\Entity\Album;
-use Audeio\Spotify\Entity\AlbumCollection;
-use Audeio\Spotify\Entity\AlbumPagination;
-use Audeio\Spotify\Entity\Artist;
-use Audeio\Spotify\Entity\ArtistCollection;
-use Audeio\Spotify\Entity\Pagination;
-use Audeio\Spotify\Entity\Playlist;
-use Audeio\Spotify\Entity\PlaylistPagination;
-use Audeio\Spotify\Entity\PlaylistTrackPagination;
-use Audeio\Spotify\Entity\Track;
-use Audeio\Spotify\Entity\TrackCollection;
-use Audeio\Spotify\Entity\TrackPagination;
-use Audeio\Spotify\Entity\User;
-use Audeio\Spotify\Exception\AccessTokenExpiredException;
-use Audeio\Spotify\Hydrator\AlbumAwareHydrator;
-use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
-use Audeio\Spotify\Hydrator\AlbumHydrator;
-use Audeio\Spotify\Hydrator\ArtistCollectionAwareHydrator;
-use Audeio\Spotify\Hydrator\ArtistCollectionHydrator;
-use Audeio\Spotify\Hydrator\ArtistHydrator;
-use Audeio\Spotify\Hydrator\ImageCollectionAwareHydrator;
-use Audeio\Spotify\Hydrator\OwnerAwareHydrator;
-use Audeio\Spotify\Hydrator\PaginatedAlbumCollectionHydrator;
-use Audeio\Spotify\Hydrator\PaginatedPlaylistCollectionHydrator;
-use Audeio\Spotify\Hydrator\PaginatedPlaylistTrackCollectionAwareHydrator;
-use Audeio\Spotify\Hydrator\PaginatedPlaylistTrackCollectionHydrator;
-use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
-use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
-use Audeio\Spotify\Hydrator\PaginationHydrator;
-use Audeio\Spotify\Hydrator\PlaylistHydrator;
-use Audeio\Spotify\Hydrator\TrackCollectionHydrator;
-use Audeio\Spotify\Hydrator\TrackHydrator;
-use Audeio\Spotify\Hydrator\UserHydrator;
+use Audeio\Spotify\Entity;
+use Audeio\Spotify\Exception;
+use Audeio\Spotify\Hydrator;
 use GuzzleHttp;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 
@@ -84,7 +54,7 @@ class API
 
     /**
      * @param string $id
-     * @return Album
+     * @return Entity\Album
      */
     public function getAlbum($id)
     {
@@ -93,17 +63,17 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new AlbumHydrator());
-        $hydrators->add(new ArtistCollectionAwareHydrator());
-        $hydrators->add(new ImageCollectionAwareHydrator());
-        $hydrators->add(new PaginatedTrackCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\AlbumHydrator());
+        $hydrators->add(new Hydrator\ArtistCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\ImageCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\PaginatedTrackCollectionAwareHydrator());
 
-        return $hydrators->hydrate($response, new Album());
+        return $hydrators->hydrate($response, new Entity\Album());
     }
 
     /**
      * @param array $ids
-     * @return AlbumCollection
+     * @return Entity\AlbumCollection
      */
     public function getAlbums(array $ids)
     {
@@ -116,16 +86,16 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new AlbumCollectionHydrator());
+        $hydrators->add(new Hydrator\AlbumCollectionHydrator());
 
-        return $hydrators->hydrate($response, new AlbumCollection());
+        return $hydrators->hydrate($response, new Entity\AlbumCollection());
     }
 
     /**
      * @param string $id
      * @param int $limit
      * @param int $offset
-     * @return TrackPagination
+     * @return Entity\TrackPagination
      */
     public function getAlbumTracks($id, $limit = 20, $offset = 0)
     {
@@ -139,15 +109,15 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new PaginationHydrator());
-        $hydrators->add(new PaginatedTrackCollectionHydrator());
+        $hydrators->add(new Hydrator\PaginationHydrator());
+        $hydrators->add(new Hydrator\PaginatedTrackCollectionHydrator());
 
-        return $hydrators->hydrate($response, new TrackPagination());
+        return $hydrators->hydrate($response, new Entity\TrackPagination());
     }
 
     /**
      * @param string $id
-     * @return Artist
+     * @return Entity\Artist
      */
     public function getArtist($id)
     {
@@ -156,15 +126,15 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new ArtistHydrator());
-        $hydrators->add(new ImageCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\ArtistHydrator());
+        $hydrators->add(new Hydrator\ImageCollectionAwareHydrator());
 
-        return $hydrators->hydrate($response, new Artist());
+        return $hydrators->hydrate($response, new Entity\Artist());
     }
 
     /**
      * @param array $ids
-     * @return ArtistCollection
+     * @return Entity\ArtistCollection
      */
     public function getArtists(array $ids)
     {
@@ -177,9 +147,9 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new ArtistCollectionHydrator());
+        $hydrators->add(new Hydrator\ArtistCollectionHydrator());
 
-        return $hydrators->hydrate($response, new ArtistCollection());
+        return $hydrators->hydrate($response, new Entity\ArtistCollection());
     }
 
     /**
@@ -188,7 +158,7 @@ class API
      * @param array $albumTypes
      * @param int $limit
      * @param int $offset
-     * @return AlbumPagination
+     * @return Entity\AlbumPagination
      */
     public function getArtistAlbums($id, $country, array $albumTypes, $limit = 20, $offset = 0)
     {
@@ -204,16 +174,16 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new PaginationHydrator());
-        $hydrators->add(new PaginatedAlbumCollectionHydrator());
+        $hydrators->add(new Hydrator\PaginationHydrator());
+        $hydrators->add(new Hydrator\PaginatedAlbumCollectionHydrator());
 
-        return $hydrators->hydrate($response, new AlbumPagination());
+        return $hydrators->hydrate($response, new Entity\AlbumPagination());
     }
 
     /**
      * @param string $id
      * @param string $country
-     * @return TrackCollection
+     * @return Entity\TrackCollection
      */
     public function getArtistTopTracks($id, $country)
     {
@@ -226,14 +196,14 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new TrackCollectionHydrator());
+        $hydrators->add(new Hydrator\TrackCollectionHydrator());
 
-        return $hydrators->hydrate($response, new TrackCollection());
+        return $hydrators->hydrate($response, new Entity\TrackCollection());
     }
 
     /**
      * @param string $id
-     * @return ArtistCollection
+     * @return Entity\ArtistCollection
      */
     public function getArtistRelatedArtists($id)
     {
@@ -242,14 +212,14 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new ArtistCollectionHydrator());
+        $hydrators->add(new Hydrator\ArtistCollectionHydrator());
 
-        return $hydrators->hydrate($response, new ArtistCollection());
+        return $hydrators->hydrate($response, new Entity\ArtistCollection());
     }
 
     /**
      * @param string $id
-     * @return Track
+     * @return Entity\Track
      */
     public function getTrack($id)
     {
@@ -258,16 +228,16 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new TrackHydrator());
-        $hydrators->add(new AlbumAwareHydrator());
-        $hydrators->add(new ArtistCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\TrackHydrator());
+        $hydrators->add(new Hydrator\AlbumAwareHydrator());
+        $hydrators->add(new Hydrator\ArtistCollectionAwareHydrator());
 
-        return $hydrators->hydrate($response, new Track());
+        return $hydrators->hydrate($response, new Entity\Track());
     }
 
     /**
      * @param array $ids
-     * @return TrackCollection
+     * @return Entity\TrackCollection
      */
     public function getTracks(array $ids)
     {
@@ -280,14 +250,14 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new TrackCollectionHydrator());
+        $hydrators->add(new Hydrator\TrackCollectionHydrator());
 
-        return $hydrators->hydrate($response, new TrackCollection());
+        return $hydrators->hydrate($response, new Entity\TrackCollection());
     }
 
     /**
      * @param string $id
-     * @return User
+     * @return Entity\User
      */
     public function getUserProfile($id)
     {
@@ -296,30 +266,30 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new UserHydrator());
+        $hydrators->add(new Hydrator\UserHydrator());
 
-        return $hydrators->hydrate($response, new User());
+        return $hydrators->hydrate($response, new Entity\User());
     }
 
     /**
-     * @return User
+     * @return Entity\User
      */
     public function getCurrentUser()
     {
         $response = $this->sendRequest($this->guzzleClient->createRequest('GET', '/v1/me'))->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new UserHydrator());
-        $hydrators->add(new ImageCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\UserHydrator());
+        $hydrators->add(new Hydrator\ImageCollectionAwareHydrator());
 
-        return $hydrators->hydrate($response, new User());
+        return $hydrators->hydrate($response, new Entity\User());
     }
 
     /**
      * @param string $id
      * @param string $userId
      * @param array $fields
-     * @return Playlist
+     * @return Entity\Playlist
      */
     public function getPlaylist($id, $userId, array $fields = array())
     {
@@ -332,19 +302,19 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new PlaylistHydrator());
-        $hydrators->add(new ImageCollectionAwareHydrator());
-        $hydrators->add(new OwnerAwareHydrator());
-        $hydrators->add(new PaginatedPlaylistTrackCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\PlaylistHydrator());
+        $hydrators->add(new Hydrator\ImageCollectionAwareHydrator());
+        $hydrators->add(new Hydrator\OwnerAwareHydrator());
+        $hydrators->add(new Hydrator\PaginatedPlaylistTrackCollectionAwareHydrator());
 
-        return $hydrators->hydrate($response, new Playlist());
+        return $hydrators->hydrate($response, new Entity\Playlist());
     }
 
     /**
      * @param string $id
      * @param string $userId
      * @param array $fields
-     * @return PlaylistTrackPagination
+     * @return Entity\PlaylistTrackPagination
      */
     public function getPlaylistTracks($id, $userId, array $fields = array())
     {
@@ -357,15 +327,15 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new PaginationHydrator());
-        $hydrators->add(new PaginatedPlaylistTrackCollectionHydrator());
+        $hydrators->add(new Hydrator\PaginationHydrator());
+        $hydrators->add(new Hydrator\PaginatedPlaylistTrackCollectionHydrator());
 
-        return $hydrators->hydrate($response, new PlaylistTrackPagination());
+        return $hydrators->hydrate($response, new Entity\PlaylistTrackPagination());
     }
 
     /**
      * @param string $id
-     * @return PlaylistPagination
+     * @return Entity\PlaylistPagination
      */
     public function getUserPlaylists($id)
     {
@@ -374,10 +344,10 @@ class API
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new PaginationHydrator());
-        $hydrators->add(new PaginatedPlaylistCollectionHydrator());
+        $hydrators->add(new Hydrator\PaginationHydrator());
+        $hydrators->add(new Hydrator\PaginatedPlaylistCollectionHydrator());
 
-        return $hydrators->hydrate($response, new Pagination());
+        return $hydrators->hydrate($response, new Entity\Pagination());
     }
 
     /**
@@ -393,7 +363,7 @@ class API
         } catch (GuzzleHttp\Exception\ClientException $e) {
             switch ($e->getResponse()->getStatusCode()) {
                 case 401:
-                    throw new AccessTokenExpiredException();
+                    throw new Exception\AccessTokenExpiredException();
                     break;
                 default:
                     throw new \Exception(sprintf('A problem occurred: %s', $e->getMessage()));
