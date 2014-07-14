@@ -4,6 +4,10 @@ namespace Audeio\Spotify\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Zend\Stdlib\AbstractOptions;
 
+/**
+ * Class Pagination
+ * @package Audeio\Spotify\Entity
+ */
 class Pagination extends AbstractOptions
 {
 

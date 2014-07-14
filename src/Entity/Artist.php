@@ -3,6 +3,10 @@ namespace Audeio\Spotify\Entity;
 
 use Zend\Stdlib\AbstractOptions;
 
+/**
+ * Class Artist
+ * @package Audeio\Spotify\Entity
+ */
 class Artist extends AbstractOptions
 {
 

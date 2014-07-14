@@ -6,6 +6,10 @@ use Audeio\Spotify\Entity\Track;
 use Audeio\Spotify\Entity\TrackCollection;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
+/**
+ * Class PaginatedTrackCollectionHydrator
+ * @package Audeio\Spotify\Hydrator
+ */
 class PaginatedTrackCollectionHydrator extends ClassMethods
 {
 
@@ -17,7 +21,7 @@ class PaginatedTrackCollectionHydrator extends ClassMethods
     public function hydrate(array $data, $object)
     {
         if (!isset($data['items'])) {
-            return;
+            return $object;
         }
 
         $trackCollection = new TrackCollection();

@@ -5,9 +5,18 @@ use Audeio\Spotify\Entity\Image;
 use Audeio\Spotify\Entity\ImageCollection;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
+/**
+ * Class ImageCollectionAwareHydrator
+ * @package Audeio\Spotify\Hydrator
+ */
 class ImageCollectionAwareHydrator extends ClassMethods
 {
 
+    /**
+     * @param array $data
+     * @param object $object
+     * @return object
+     */
     public function hydrate(array $data, $object)
     {
         if (!isset($data['images'])) {

@@ -6,6 +6,10 @@ use Audeio\Spotify\Entity\AlbumCollection;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
+/**
+ * Class AlbumCollectionHydrator
+ * @package Audeio\Spotify\Hydrator
+ */
 class AlbumCollectionHydrator extends ClassMethods
 {
 
@@ -17,7 +21,7 @@ class AlbumCollectionHydrator extends ClassMethods
     public function hydrate(array $data, $object)
     {
         if (!isset($data['albums'])) {
-            return;
+            return $object;
         }
 
         foreach($data['albums'] as $album) {

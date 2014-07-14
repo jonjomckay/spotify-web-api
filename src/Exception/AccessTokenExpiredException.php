@@ -1,6 +1,10 @@
 <?php
 namespace Audeio\Spotify\Exception;
 
+/**
+ * Class AccessTokenExpiredException
+ * @package Audeio\Spotify\Exception
+ */
 class AccessTokenExpiredException extends \Exception
 {
 

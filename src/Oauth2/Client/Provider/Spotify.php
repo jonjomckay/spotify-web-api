@@ -5,21 +5,35 @@ use League\OAuth2\Client\Provider\IdentityProvider;
 use League\OAuth2\Client\Provider\User;
 use League\OAuth2\Client\Token\AccessToken;
 
+/**
+ * Class Spotify
+ * @package Audeio\Spotify\Oauth2\Client\Provider
+ */
 class Spotify extends IdentityProvider
 {
 
     public $scopeSeparator = ' ';
 
+    /**
+     * @return string
+     */
     public function urlAuthorize()
     {
         return 'https://accounts.spotify.com/authorize';
     }
 
+    /**
+     * @return string
+     */
     public function urlAccessToken()
     {
         return 'https://accounts.spotify.com/api/token';
     }
 
+    /**
+     * @param AccessToken $token
+     * @return string
+     */
     public function urlUserDetails(AccessToken $token)
     {
         $this->headers = array(
@@ -29,6 +43,11 @@ class Spotify extends IdentityProvider
         return 'https://api.spotify.com/v1/me';
     }
 
+    /**
+     * @param $response
+     * @param AccessToken $token
+     * @return User
+     */
     public function userDetails($response, AccessToken $token)
     {
         $this->headers = array(

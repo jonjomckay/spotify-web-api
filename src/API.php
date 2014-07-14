@@ -8,7 +8,6 @@ use Audeio\Spotify\Entity\Artist;
 use Audeio\Spotify\Entity\ArtistCollection;
 use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\Playlist;
-use Audeio\Spotify\Entity\PlaylistCollection;
 use Audeio\Spotify\Entity\PlaylistPagination;
 use Audeio\Spotify\Entity\PlaylistTrackPagination;
 use Audeio\Spotify\Entity\Track;
@@ -31,11 +30,9 @@ use Audeio\Spotify\Hydrator\PaginatedPlaylistTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginationHydrator;
-use Audeio\Spotify\Hydrator\PlaylistCollectionHydrator;
 use Audeio\Spotify\Hydrator\PlaylistHydrator;
 use Audeio\Spotify\Hydrator\TrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\TrackHydrator;
-use Audeio\Spotify\Hydrator\TracksAwareHydrator;
 use Audeio\Spotify\Hydrator\UserHydrator;
 use GuzzleHttp;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
@@ -383,6 +380,12 @@ class API
         return $hydrators->hydrate($response, new Pagination());
     }
 
+    /**
+     * @param GuzzleHttp\Message\RequestInterface $request
+     * @return GuzzleHttp\Message\ResponseInterface|null
+     * @throws Exception\AccessTokenExpiredException
+     * @throws \Exception
+     */
     private function sendRequest(GuzzleHttp\Message\RequestInterface $request)
     {
         try {
@@ -396,11 +399,6 @@ class API
                     throw new \Exception(sprintf('A problem occurred: %s', $e->getMessage()));
                     break;
             }
-
-        } catch (\Exception $e) {
-            var_dump($e);
-
-            return null;
         }
     }
 }
