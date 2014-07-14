@@ -223,6 +223,22 @@ class API
     }
 
     /**
+     * @param string $id
+     * @return ArtistCollection
+     */
+    public function getArtistRelatedArtists($id)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/related-artists', $id))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new ArtistCollectionHydrator());
+
+        return $hydrators->hydrate($response, new ArtistCollection());
+    }
+
+    /**
      * @return User
      */
     public function getCurrentUser()
