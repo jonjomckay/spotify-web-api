@@ -2,20 +2,19 @@
 namespace Audeio\Spotify;
 
 use Audeio\Spotify\Entity\Album;
+use Audeio\Spotify\Entity\AlbumCollection;
 use Audeio\Spotify\Entity\PlaylistCollection;
 use Audeio\Spotify\Entity\User;
+use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\AlbumHydrator;
 use Audeio\Spotify\Hydrator\ArtistCollectionAwareHydrator;
-use Audeio\Spotify\Hydrator\ImageAwareHydrator;
 use Audeio\Spotify\Hydrator\ImageCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PlaylistCollectionHydrator;
+use Audeio\Spotify\Hydrator\TracksAwareHydrator;
 use Audeio\Spotify\Hydrator\UserHydrator;
-use Audeio\Spotify\Oauth2\Client\Provider\Spotify;
 use GuzzleHttp;
-use League\OAuth2\Client\Grant\RefreshToken;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
-use Zend\Stdlib\Hydrator\ClassMethods;
 
 class API
 {
@@ -65,6 +64,22 @@ class API
         $hydrators->add(new PaginatedTrackCollectionAwareHydrator());
 
         return $hydrators->hydrate($response, new Album());
+    }
+
+    public function getAlbums(array $ids)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', '/v1/albums', array(
+                'query' => array(
+                    'ids' => implode(',', $ids)
+                )
+            ))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new AlbumCollectionHydrator());
+
+        return $hydrators->hydrate($response, new AlbumCollection());
     }
 
     /**
