@@ -21,7 +21,7 @@ class TrackCollectionHydrator extends ClassMethods
     public function hydrate(array $data, $object)
     {
         if (!isset($data['tracks'])) {
-            return;
+            return $object;
         }
 
         foreach($data['tracks'] as $track) {

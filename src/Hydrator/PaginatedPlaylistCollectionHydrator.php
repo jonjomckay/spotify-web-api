@@ -1,23 +1,22 @@
 <?php
 namespace Audeio\Spotify\Hydrator;
 
+use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\Playlist;
 use Audeio\Spotify\Entity\PlaylistCollection;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
- * Class PlaylistCollectionHydrator
+ * Class PaginatedPlaylistCollectionHydrator
  * @package Audeio\Spotify\Hydrator
  */
-class PlaylistCollectionHydrator extends ClassMethods
+class PaginatedPlaylistCollectionHydrator extends ClassMethods
 {
 
     /**
-     * Hydrate $object with the provided $data.
-     *
-     * @param  array $data
-     * @param  PlaylistCollection $object
+     * @param array $data
+     * @param Pagination $object
      * @return object
      */
     public function hydrate(array $data, $object)
@@ -26,15 +25,19 @@ class PlaylistCollectionHydrator extends ClassMethods
             return $object;
         }
 
-        foreach ($data['items'] as $item) {
+        $playlistCollection = new PlaylistCollection();
+
+        foreach($data['items'] as $playlist) {
             $hydrators = new AggregateHydrator();
             $hydrators->add(new PlaylistHydrator());
             $hydrators->add(new OwnerAwareHydrator());
-            $hydrators->add(new PlaylistTracksAwareHydrator());
+            $hydrators->add(new TracksAwareHydrator());
 
-            $object->add($hydrators->hydrate($item, new Playlist()));
+            $playlistCollection->add($hydrators->hydrate($playlist, new Playlist()));
         }
+
+        $object->setItems($playlistCollection);
 
         return $object;
     }
-}
+} 

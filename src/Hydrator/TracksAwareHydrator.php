@@ -1,10 +1,14 @@
 <?php
 namespace Audeio\Spotify\Hydrator;
 
-use Audeio\Spotify\Entity\Image;
+use Audeio\Spotify\Entity\Tracks;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
-class ImageAwareHydrator extends ClassMethods
+/**
+ * Class TracksAwareHydrator
+ * @package Audeio\Spotify\Hydrator
+ */
+class TracksAwareHydrator extends ClassMethods
 {
 
     /**
@@ -16,17 +20,11 @@ class ImageAwareHydrator extends ClassMethods
      */
     public function hydrate(array $data, $object)
     {
-        if (!isset($data['images'])) {
+        if (!isset($data['tracks'])) {
             return $object;
         }
 
-        $images = array();
-
-        foreach ($data['images'] as $image) {
-            $images[] = new Image($image);
-        }
-
-        $object->setImages($images);
+        $object->setTracks(new Tracks($data['tracks']));
 
         return $object;
     }

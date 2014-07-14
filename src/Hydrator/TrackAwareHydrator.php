@@ -1,15 +1,15 @@
 <?php
 namespace Audeio\Spotify\Hydrator;
 
-use Audeio\Spotify\Entity\User;
+use Audeio\Spotify\Entity\Track;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
- * Class OwnerAwareHydrator
+ * Class TrackAwareHydrator
  * @package Audeio\Spotify\Hydrator
  */
-class OwnerAwareHydrator extends ClassMethods
+class TrackAwareHydrator extends ClassMethods
 {
 
     /**
@@ -21,15 +21,17 @@ class OwnerAwareHydrator extends ClassMethods
      */
     public function hydrate(array $data, $object)
     {
-        if (!isset($data['owner'])) {
+        if (!isset($data['track'])) {
             return $object;
         }
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new UserHydrator());
+        $hydrators->add(new TrackHydrator());
+        $hydrators->add(new AlbumAwareHydrator());
+        $hydrators->add(new ArtistCollectionAwareHydrator());
         $hydrators->add(new ImageCollectionAwareHydrator());
 
-        $object->setOwner($hydrators->hydrate($data['owner'], new User()));
+        $object->setTrack($hydrators->hydrate($data['track'], new Track()));
 
         return $object;
     }

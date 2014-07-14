@@ -7,7 +7,9 @@ use Audeio\Spotify\Entity\AlbumPagination;
 use Audeio\Spotify\Entity\Artist;
 use Audeio\Spotify\Entity\ArtistCollection;
 use Audeio\Spotify\Entity\Pagination;
+use Audeio\Spotify\Entity\Playlist;
 use Audeio\Spotify\Entity\PlaylistCollection;
+use Audeio\Spotify\Entity\PlaylistPagination;
 use Audeio\Spotify\Entity\Track;
 use Audeio\Spotify\Entity\TrackCollection;
 use Audeio\Spotify\Entity\TrackPagination;
@@ -20,11 +22,15 @@ use Audeio\Spotify\Hydrator\ArtistCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\ArtistCollectionHydrator;
 use Audeio\Spotify\Hydrator\ArtistHydrator;
 use Audeio\Spotify\Hydrator\ImageCollectionAwareHydrator;
+use Audeio\Spotify\Hydrator\OwnerAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedAlbumCollectionHydrator;
+use Audeio\Spotify\Hydrator\PaginatedPlaylistCollectionHydrator;
+use Audeio\Spotify\Hydrator\PaginatedPlaylistTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginationHydrator;
 use Audeio\Spotify\Hydrator\PlaylistCollectionHydrator;
+use Audeio\Spotify\Hydrator\PlaylistHydrator;
 use Audeio\Spotify\Hydrator\TrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\TrackHydrator;
 use Audeio\Spotify\Hydrator\TracksAwareHydrator;
@@ -311,19 +317,45 @@ class API
     }
 
     /**
-     * @param $username
-     * @return PlaylistCollection
+     * @param string $id
+     * @param string $userId
+     * @param array $fields
+     * @return Playlist
      */
-    public function getUserPlaylists($username)
+    public function getPlaylist($id, $userId, array $fields = array())
     {
         $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists', $username))
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s', $userId, $id), array(
+                'query' => array(
+                    'fields' => implode(',', $fields)
+                )
+            ))
         )->json();
 
         $hydrators = new AggregateHydrator();
-        $hydrators->add(new PlaylistCollectionHydrator());
+        $hydrators->add(new PlaylistHydrator());
+        $hydrators->add(new ImageCollectionAwareHydrator());
+        $hydrators->add(new OwnerAwareHydrator());
+        $hydrators->add(new PaginatedPlaylistTrackCollectionAwareHydrator());
 
-        return $hydrators->hydrate($response, new PlaylistCollection());
+        return $hydrators->hydrate($response, new Playlist());
+    }
+
+    /**
+     * @param string $id
+     * @return PlaylistPagination
+     */
+    public function getUserPlaylists($id)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists', $id))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new PaginationHydrator());
+        $hydrators->add(new PaginatedPlaylistCollectionHydrator());
+
+        return $hydrators->hydrate($response, new Pagination());
     }
 
     private function sendRequest(GuzzleHttp\Message\RequestInterface $request)
@@ -336,7 +368,7 @@ class API
                     throw new AccessTokenExpiredException();
                     break;
                 default:
-                    throw new \Exception('A problem occurred');
+                    throw new \Exception(sprintf('A problem occurred: %s', $e->getMessage()));
                     break;
             }
 

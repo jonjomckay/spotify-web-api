@@ -12,9 +12,19 @@ class Playlist extends AbstractOptions
     private $collaborative;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * @var array
      */
     private $externalUrls;
+
+    /**
+     * @var array
+     */
+    private $followers;
 
     /**
      * @var string
@@ -25,6 +35,11 @@ class Playlist extends AbstractOptions
      * @var string
      */
     private $id;
+
+    /**
+     * @var ImageCollection
+     */
+    private $images;
 
     /**
      * @var string
@@ -42,7 +57,7 @@ class Playlist extends AbstractOptions
     private $public;
 
     /**
-     * @var PlaylistTrack
+     * @var PlaylistTrackPagination
      */
     private $tracks;
 
@@ -73,6 +88,22 @@ class Playlist extends AbstractOptions
     }
 
     /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
      * @return array
      */
     public function getExternalUrls()
@@ -86,6 +117,22 @@ class Playlist extends AbstractOptions
     public function setExternalUrls($externalUrls)
     {
         $this->externalUrls = $externalUrls;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFollowers()
+    {
+        return $this->followers;
+    }
+
+    /**
+     * @param array $followers
+     */
+    public function setFollowers($followers)
+    {
+        $this->followers = $followers;
     }
 
     /**
@@ -118,6 +165,22 @@ class Playlist extends AbstractOptions
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return ImageCollection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param ImageCollection $images
+     */
+    public function setImages($images)
+    {
+        $this->images = $images;
     }
 
     /**
@@ -169,7 +232,7 @@ class Playlist extends AbstractOptions
     }
 
     /**
-     * @return PlaylistTrack
+     * @return PlaylistTrackPagination
      */
     public function getTracks()
     {
@@ -177,7 +240,7 @@ class Playlist extends AbstractOptions
     }
 
     /**
-     * @param PlaylistTrack $tracks
+     * @param PlaylistTrackPagination $tracks
      */
     public function setTracks($tracks)
     {
