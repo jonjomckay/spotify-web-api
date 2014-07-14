@@ -3,10 +3,12 @@ namespace Audeio\Spotify;
 
 use Audeio\Spotify\Entity\Album;
 use Audeio\Spotify\Entity\AlbumCollection;
+use Audeio\Spotify\Entity\AlbumPagination;
 use Audeio\Spotify\Entity\Artist;
 use Audeio\Spotify\Entity\ArtistCollection;
 use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\PlaylistCollection;
+use Audeio\Spotify\Entity\TrackPagination;
 use Audeio\Spotify\Entity\User;
 use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\AlbumHydrator;
@@ -24,6 +26,10 @@ use Audeio\Spotify\Hydrator\UserHydrator;
 use GuzzleHttp;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 
+/**
+ * Class API
+ * @package Audeio\Spotify
+ */
 class API
 {
 
@@ -39,6 +45,9 @@ class API
      */
     private $accessToken;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->guzzleClient = new GuzzleHttp\Client([
@@ -52,6 +61,9 @@ class API
         ]);
     }
 
+    /**
+     * @param string $accessToken
+     */
     public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
@@ -59,6 +71,10 @@ class API
         $this->guzzleClient->setDefaultOption('headers/Authorization', sprintf('Bearer %s', $this->accessToken));
     }
 
+    /**
+     * @param string $id
+     * @return Album
+     */
     public function getAlbum($id)
     {
         $response = $this->sendRequest(
@@ -74,6 +90,10 @@ class API
         return $hydrators->hydrate($response, new Album());
     }
 
+    /**
+     * @param array $ids
+     * @return AlbumCollection
+     */
     public function getAlbums(array $ids)
     {
         $response = $this->sendRequest(
@@ -90,6 +110,12 @@ class API
         return $hydrators->hydrate($response, new AlbumCollection());
     }
 
+    /**
+     * @param string $id
+     * @param int $limit
+     * @param int $offset
+     * @return TrackPagination
+     */
     public function getAlbumTracks($id, $limit = 20, $offset = 0)
     {
         $response = $this->sendRequest(
@@ -108,6 +134,10 @@ class API
         return $hydrators->hydrate($response, new Pagination());
     }
 
+    /**
+     * @param string $id
+     * @return Artist
+     */
     public function getArtist($id)
     {
         $response = $this->sendRequest(
@@ -121,6 +151,10 @@ class API
         return $hydrators->hydrate($response, new Artist());
     }
 
+    /**
+     * @param array $ids
+     * @return ArtistCollection
+     */
     public function getArtists(array $ids)
     {
         $response = $this->sendRequest(
@@ -143,7 +177,7 @@ class API
      * @param array $albumTypes
      * @param int $limit
      * @param int $offset
-     * @return Pagination
+     * @return AlbumPagination
      */
     public function getArtistAlbums($id, $country, array $albumTypes, $limit = 20, $offset = 0)
     {
