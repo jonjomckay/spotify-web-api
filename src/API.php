@@ -8,6 +8,7 @@ use Audeio\Spotify\Entity\Artist;
 use Audeio\Spotify\Entity\ArtistCollection;
 use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\PlaylistCollection;
+use Audeio\Spotify\Entity\TrackCollection;
 use Audeio\Spotify\Entity\TrackPagination;
 use Audeio\Spotify\Entity\User;
 use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
@@ -21,6 +22,7 @@ use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginationHydrator;
 use Audeio\Spotify\Hydrator\PlaylistCollectionHydrator;
+use Audeio\Spotify\Hydrator\TrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\TracksAwareHydrator;
 use Audeio\Spotify\Hydrator\UserHydrator;
 use GuzzleHttp;
@@ -197,6 +199,27 @@ class API
         $hydrators->add(new PaginatedAlbumCollectionHydrator());
 
         return $hydrators->hydrate($response, new Pagination());
+    }
+
+    /**
+     * @param string $id
+     * @param string $country
+     * @return TrackCollection
+     */
+    public function getArtistTopTracks($id, $country)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/top-tracks', $id), array(
+                'query' => array(
+                    'country' => $country
+                )
+            ))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new TrackCollectionHydrator());
+
+        return $hydrators->hydrate($response, new TrackCollection());
     }
 
     /**
