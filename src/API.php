@@ -4,12 +4,14 @@ namespace Audeio\Spotify;
 use Audeio\Spotify\Entity\Album;
 use Audeio\Spotify\Entity\AlbumCollection;
 use Audeio\Spotify\Entity\Artist;
+use Audeio\Spotify\Entity\ArtistCollection;
 use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\PlaylistCollection;
 use Audeio\Spotify\Entity\User;
 use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\AlbumHydrator;
 use Audeio\Spotify\Hydrator\ArtistCollectionAwareHydrator;
+use Audeio\Spotify\Hydrator\ArtistCollectionHydrator;
 use Audeio\Spotify\Hydrator\ArtistHydrator;
 use Audeio\Spotify\Hydrator\ImageCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
@@ -116,6 +118,22 @@ class API
         $hydrators->add(new ImageCollectionAwareHydrator());
 
         return $hydrators->hydrate($response, new Artist());
+    }
+
+    public function getArtists(array $ids)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', '/v1/artists', array(
+                'query' => array(
+                    'ids' => implode(',', $ids)
+                )
+            ))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new ArtistCollectionHydrator());
+
+        return $hydrators->hydrate($response, new ArtistCollection());
     }
 
     /**
