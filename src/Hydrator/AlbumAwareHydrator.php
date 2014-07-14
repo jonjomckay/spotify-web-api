@@ -2,6 +2,7 @@
 namespace Audeio\Spotify\Hydrator;
 
 use Audeio\Spotify\Entity\Album;
+use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
@@ -24,7 +25,11 @@ class AlbumAwareHydrator extends ClassMethods
             return $object;
         }
 
-        $object->setAlbum(new Album($data['album']));
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new AlbumHydrator());
+        $hydrators->add(new ImageCollectionAwareHydrator());
+
+        $object->setAlbum($hydrators->hydrate($data['album'], new Album()));
 
         return $object;
     }

@@ -8,9 +8,11 @@ use Audeio\Spotify\Entity\Artist;
 use Audeio\Spotify\Entity\ArtistCollection;
 use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\PlaylistCollection;
+use Audeio\Spotify\Entity\Track;
 use Audeio\Spotify\Entity\TrackCollection;
 use Audeio\Spotify\Entity\TrackPagination;
 use Audeio\Spotify\Entity\User;
+use Audeio\Spotify\Hydrator\AlbumAwareHydrator;
 use Audeio\Spotify\Hydrator\AlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\AlbumHydrator;
 use Audeio\Spotify\Hydrator\ArtistCollectionAwareHydrator;
@@ -23,6 +25,7 @@ use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginationHydrator;
 use Audeio\Spotify\Hydrator\PlaylistCollectionHydrator;
 use Audeio\Spotify\Hydrator\TrackCollectionHydrator;
+use Audeio\Spotify\Hydrator\TrackHydrator;
 use Audeio\Spotify\Hydrator\TracksAwareHydrator;
 use Audeio\Spotify\Hydrator\UserHydrator;
 use GuzzleHttp;
@@ -236,6 +239,24 @@ class API
         $hydrators->add(new ArtistCollectionHydrator());
 
         return $hydrators->hydrate($response, new ArtistCollection());
+    }
+
+    /**
+     * @param string $id
+     * @return Track
+     */
+    public function getTrack($id)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/tracks/%s', $id))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new TrackHydrator());
+        $hydrators->add(new AlbumAwareHydrator());
+        $hydrators->add(new ArtistCollectionAwareHydrator());
+
+        return $hydrators->hydrate($response, new Track());
     }
 
     /**
