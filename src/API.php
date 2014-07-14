@@ -14,6 +14,7 @@ use Audeio\Spotify\Hydrator\ArtistCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\ArtistCollectionHydrator;
 use Audeio\Spotify\Hydrator\ArtistHydrator;
 use Audeio\Spotify\Hydrator\ImageCollectionAwareHydrator;
+use Audeio\Spotify\Hydrator\PaginatedAlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginationHydrator;
@@ -134,6 +135,34 @@ class API
         $hydrators->add(new ArtistCollectionHydrator());
 
         return $hydrators->hydrate($response, new ArtistCollection());
+    }
+
+    /**
+     * @param string $id
+     * @param string $country
+     * @param array $albumTypes
+     * @param int $limit
+     * @param int $offset
+     * @return Pagination
+     */
+    public function getArtistAlbums($id, $country, array $albumTypes, $limit = 20, $offset = 0)
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/albums', $id), array(
+                'query' => array(
+                    'album_type' => implode(',', $albumTypes),
+                    'country' => $country,
+                    'limit' => $limit,
+                    'offset' => $offset
+                )
+            ))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new PaginationHydrator());
+        $hydrators->add(new PaginatedAlbumCollectionHydrator());
+
+        return $hydrators->hydrate($response, new Pagination());
     }
 
     /**
