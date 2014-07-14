@@ -10,6 +10,7 @@ use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\Playlist;
 use Audeio\Spotify\Entity\PlaylistCollection;
 use Audeio\Spotify\Entity\PlaylistPagination;
+use Audeio\Spotify\Entity\PlaylistTrackPagination;
 use Audeio\Spotify\Entity\Track;
 use Audeio\Spotify\Entity\TrackCollection;
 use Audeio\Spotify\Entity\TrackPagination;
@@ -26,6 +27,7 @@ use Audeio\Spotify\Hydrator\OwnerAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedAlbumCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginatedPlaylistCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginatedPlaylistTrackCollectionAwareHydrator;
+use Audeio\Spotify\Hydrator\PaginatedPlaylistTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionAwareHydrator;
 use Audeio\Spotify\Hydrator\PaginatedTrackCollectionHydrator;
 use Audeio\Spotify\Hydrator\PaginationHydrator;
@@ -143,7 +145,7 @@ class API
         $hydrators->add(new PaginationHydrator());
         $hydrators->add(new PaginatedTrackCollectionHydrator());
 
-        return $hydrators->hydrate($response, new Pagination());
+        return $hydrators->hydrate($response, new TrackPagination());
     }
 
     /**
@@ -208,7 +210,7 @@ class API
         $hydrators->add(new PaginationHydrator());
         $hydrators->add(new PaginatedAlbumCollectionHydrator());
 
-        return $hydrators->hydrate($response, new Pagination());
+        return $hydrators->hydrate($response, new AlbumPagination());
     }
 
     /**
@@ -339,6 +341,29 @@ class API
         $hydrators->add(new PaginatedPlaylistTrackCollectionAwareHydrator());
 
         return $hydrators->hydrate($response, new Playlist());
+    }
+
+    /**
+     * @param string $id
+     * @param string $userId
+     * @param array $fields
+     * @return PlaylistTrackPagination
+     */
+    public function getPlaylistTracks($id, $userId, array $fields = array())
+    {
+        $response = $this->sendRequest(
+            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s/tracks', $userId, $id), array(
+                'query' => array(
+                    'fields' => implode(',', $fields)
+                )
+            ))
+        )->json();
+
+        $hydrators = new AggregateHydrator();
+        $hydrators->add(new PaginationHydrator());
+        $hydrators->add(new PaginatedPlaylistTrackCollectionHydrator());
+
+        return $hydrators->hydrate($response, new PlaylistTrackPagination());
     }
 
     /**
