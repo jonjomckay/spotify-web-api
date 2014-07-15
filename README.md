@@ -14,13 +14,17 @@ Spotify Web API
 
 ### Usage
 
-1. Instantiate a new instance of `Audeio\Spotify\API` and set the access token retrieved by your OAuth 2 client (a provider for `league/oauth2-client` is included under `Audeio\Spotify\Oauth2\Client\Provider\Spotify`):
+1. Instantiate a new instance of `Audeio\Spotify\API` and set the access token retrieved by your OAuth 2 client (a provider for `league/oauth2-client` is included under `Audeio\Spotify\
+Oauth2\Client\Provider\Spotify`):
 
+        ```php
         $api = new \Audeio\Spotify\API();
         $api->setAccessToken('BAWSDOJWEO984yt34y35YgdsnhlreGERH56u45htrH54y');
+        ```
 
 2. Call all the methods you need!
 
+        ```php
         $api->getAlbum('id');
         $api->getAlbums(array('id-1', 'id-2', 'id-3'));
         $api->getAlbumTracks('id');
@@ -35,6 +39,7 @@ Spotify Web API
         $api->getPlaylist('id', 'userId');
         $api->getPlaylistTracks('id', 'userId');
         $api->getUserPlaylists('id');
+        ```
 
 ## License
 The MIT License; please see [LICENSE](LICENSE) for more information.
