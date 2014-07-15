@@ -14,7 +14,7 @@ Spotify Web API
 
 ### Usage
 
-1. Instantiate a new instance `Audeio\Spotify\API` and set the access token retrieved by your OAuth 2 client:
+1. Instantiate a new instance of `Audeio\Spotify\API` and set the access token retrieved by your OAuth 2 client (a provider for `league/oauth2-client` is included under `Audeio\Spotify\Oauth2\Client\Provider\Spotify`):
 
 ````php
 $api = new \Audeio\Spotify\API();
