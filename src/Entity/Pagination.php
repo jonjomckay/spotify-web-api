@@ -42,11 +42,6 @@ class Pagination extends AbstractOptions
     private $previous;
 
     /**
-     * @var integer
-     */
-    private $total;
-
-    /**
      * @return string
      */
     public function getHref()
@@ -68,6 +63,14 @@ class Pagination extends AbstractOptions
     public function getItems()
     {
         return $this->items;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasItems()
+    {
+        return !empty($this->items);
     }
 
     /**
