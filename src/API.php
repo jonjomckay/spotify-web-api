@@ -347,7 +347,7 @@ class API
         $hydrators->add(new Hydrator\PaginationHydrator());
         $hydrators->add(new Hydrator\PaginatedPlaylistCollectionHydrator());
 
-        return $hydrators->hydrate($response, new Entity\Pagination());
+        return $hydrators->hydrate($response, new Entity\PlaylistPagination());
     }
 
     /**
