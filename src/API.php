@@ -295,9 +295,9 @@ class API
     {
         $response = $this->sendRequest(
             $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s', $userId, $id), array(
-                'query' => array(
+                'query' => array_filter(array(
                     'fields' => implode(',', $fields)
-                )
+                ))
             ))
         )->json();
 
@@ -320,9 +320,9 @@ class API
     {
         $response = $this->sendRequest(
             $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s/tracks', $userId, $id), array(
-                'query' => array(
+                'query' => array_filter(array(
                     'fields' => implode(',', $fields)
-                )
+                ))
             ))
         )->json();
 
