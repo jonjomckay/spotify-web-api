@@ -78,7 +78,7 @@ class Playlist extends AbstractOptions
     /**
      * @return boolean
      */
-    public function getCollaborative()
+    public function isCollaborative()
     {
         return $this->collaborative;
     }
@@ -222,7 +222,7 @@ class Playlist extends AbstractOptions
     /**
      * @return boolean
      */
-    public function getPublic()
+    public function isPublic()
     {
         return $this->public;
     }

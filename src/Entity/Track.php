@@ -173,7 +173,7 @@ class Track extends AbstractOptions
     /**
      * @return boolean
      */
-    public function getExplicit()
+    public function isExplicit()
     {
         return $this->explicit;
     }
