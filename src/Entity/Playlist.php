@@ -282,4 +282,12 @@ class Playlist extends AbstractOptions
     {
         $this->uri = $uri;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 } 

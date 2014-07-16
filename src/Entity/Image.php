@@ -72,4 +72,12 @@ class Image extends AbstractOptions
     {
         $this->width = $width;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->url;
+    }
 } 

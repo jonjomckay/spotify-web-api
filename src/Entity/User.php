@@ -219,4 +219,12 @@ class User extends AbstractOptions
     {
         $this->uri = $uri;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s (%s)', $this->displayName, $this->id);
+    }
 } 
