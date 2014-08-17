@@ -1,6 +1,8 @@
 Spotify Web API
 ===============
 
+[![Build Status](https://travis-ci.org/jonjomckay/spotify-web-api.png?branch=develop)](https://travis-ci.org/jonjomckay/spotify-web-api)
+
 ## Requirements
 
 * PHP 5.3+
@@ -36,8 +38,8 @@ Oauth2\Client\Provider\Spotify`):
     $api->getTracks(array('id-1', 'id-2', 'id-3'));
     $api->getUserProfile('id');
     $api->getCurrentUser();
-    $api->getPlaylist('id', 'userId');
-    $api->getPlaylistTracks('id', 'userId');
+    $api->getUserPlaylist('userId', 'id');
+    $api->getUserPlaylistTracks('userId', 'id');
     $api->getUserPlaylists('id');
     ```
 
