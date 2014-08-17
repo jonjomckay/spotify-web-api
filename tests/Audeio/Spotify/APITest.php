@@ -393,8 +393,16 @@ class APITest extends \PHPUnit_Framework_TestCase
 
     public function testGetUserPlaylistsWhereUserDoesNotExist()
     {
-        $this->setExpectedException('Audeio\Spotify\Exception\SpotifyException', 'No such user');
+        // TODO: Check with Spotify is this is really meant to return an empty Pagination object
+        // $this->setExpectedException('Audeio\Spotify\Exception\SpotifyException', 'No such user');
 
-        $this->api->getUserPlaylists('fake-user-made-up-by-me-for-testing-93874123');
+        $response = $this->api->getUserPlaylists('fake-user-made-up-by-me-for-testing-93874123');
+
+        $this->assertInstanceOf('Audeio\Spotify\Entity\PlaylistPagination', $response);
+        $this->assertNotNull($response->getHref());
+        $this->assertSame(0, $response->getItems()->count());
+        $this->assertSame(0, $response->getLimit());
+        $this->assertNotNull($response->getOffset());
+        $this->assertNotNull($response->getTotal());
     }
 }
