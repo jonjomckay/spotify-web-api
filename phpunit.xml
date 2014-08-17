@@ -2,7 +2,13 @@
     <testsuite name="SpotifyWebApi">
         <directory>./tests</directory>
     </testsuite>
+    <logging>
+        <log type="coverage-html" target="build/coverage"/>
+    </logging>
     <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
         <whitelist>
             <directory suffix=".php">./tests</directory>
         </whitelist>
