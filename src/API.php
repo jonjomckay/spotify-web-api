@@ -169,7 +169,6 @@ class API
         $request->getQuery()->add('country', $country);
         $request->getQuery()->add('limit', $limit);
         $request->getQuery()->add('offset', $offset);
-        $request->getQuery()->replace(array_filter($request->getQuery()->toArray()));
 
         $response = $this->sendRequest($request)->json();
 
@@ -288,7 +287,10 @@ class API
     public function getUserPlaylist($userId, $id, array $fields = array())
     {
         $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s', $userId, $id));
-        $request->getQuery()->add('fields', implode(',', array_merge($this->paginationFields, $fields)));
+        $request->getQuery()->add(
+            'fields',
+            implode(',', empty($fields) ? $fields : array_merge($this->paginationFields, $fields))
+        );
 
         $response = $this->sendRequest($request)->json();
 
@@ -310,7 +312,10 @@ class API
     public function getUserPlaylistTracks($userId, $id, array $fields = array())
     {
         $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s/tracks', $userId, $id));
-        $request->getQuery()->add('fields', implode(',', array_merge($this->paginationFields, $fields)));
+        $request->getQuery()->add(
+            'fields',
+            implode(',', empty($fields) ? $fields : array_merge($this->paginationFields, $fields))
+        );
 
         $response = $this->sendRequest($request)->json();
 
@@ -346,6 +351,9 @@ class API
      */
     private function sendRequest(Guzzle\Http\Message\RequestInterface $request)
     {
+        // Clean the query string of any null valued parameters
+        $request->getQuery()->replace(array_filter($request->getQuery()->toArray()));
+
         try {
             return $this->guzzleClient->send($request);
         } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
