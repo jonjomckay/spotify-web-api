@@ -11,7 +11,7 @@
     },
     "require": {
         "php": ">=5.3",
-        "guzzlehttp/guzzle": "4.*",
+        "guzzle/guzzle": "3.*",
         "league/oauth2-client": "0.*",
         "zendframework/zend-filter": "2.*",
         "zendframework/zend-eventmanager": "2.*",

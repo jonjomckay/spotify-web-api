@@ -1,9 +1,9 @@
 <?php
 namespace Audeio\Spotify\Hydrator;
 
-use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\Track;
 use Audeio\Spotify\Entity\TrackCollection;
+use Audeio\Spotify\Entity\TrackPagination;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
@@ -24,7 +24,7 @@ class PaginatedTrackCollectionAwareHydrator extends ClassMethods
             return $object;
         }
 
-        $paginatedTrackCollection = new Pagination($data['tracks']);
+        $paginatedTrackCollection = new TrackPagination($data['tracks']);
 
         $trackCollection = new TrackCollection();
 

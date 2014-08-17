@@ -4,7 +4,7 @@ namespace Audeio\Spotify;
 use Audeio\Spotify\Entity;
 use Audeio\Spotify\Exception;
 use Audeio\Spotify\Hydrator;
-use GuzzleHttp;
+use Guzzle;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 
 /**
@@ -14,10 +14,13 @@ use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 class API
 {
 
+    /**
+     * @var string
+     */
     private static $baseUrl = 'https://api.spotify.com';
 
     /**
-     * @var GuzzleHttp\Client
+     * @var Guzzle\Http\Client
      */
     private $guzzleClient;
 
@@ -27,19 +30,24 @@ class API
     private $accessToken;
 
     /**
+     * @var array
+     */
+    private $paginationFields = array('href', 'limit', 'offset', 'total');
+
+    /**
      *
      */
     public function __construct()
     {
-        $this->guzzleClient = new GuzzleHttp\Client([
-            'base_url' => static::$baseUrl,
-            'defaults' => [
-                'headers' => [
+        $this->guzzleClient = new Guzzle\Http\Client(static::$baseUrl);
+        $this->guzzleClient->setConfig(array(
+            'defaults' => array(
+                'headers' => array(
                     'Content-Type' => 'application/json',
                     'Authorization' => sprintf('Bearer %s', $this->accessToken)
-                ]
-            ]
-        ]);
+                )
+            )
+        ));
     }
 
     /**
@@ -49,7 +57,10 @@ class API
     {
         $this->accessToken = $accessToken;
 
-        $this->guzzleClient->setDefaultOption('headers/Authorization', sprintf('Bearer %s', $this->accessToken));
+        $this->guzzleClient->setDefaultOption(
+            'headers/Authorization',
+            $accessToken ? sprintf('Bearer %s', $accessToken) : null
+        );
     }
 
     /**
@@ -77,13 +88,10 @@ class API
      */
     public function getAlbums(array $ids)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', '/v1/albums', array(
-                'query' => array(
-                    'ids' => implode(',', $ids)
-                )
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', '/v1/albums');
+        $request->getQuery()->add('ids', implode(',', $ids));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\AlbumCollectionHydrator());
@@ -99,14 +107,11 @@ class API
      */
     public function getAlbumTracks($id, $limit = 20, $offset = 0)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/albums/%s/tracks', $id), array(
-                'query' => array(
-                    'limit' => $limit,
-                    'offset' => $offset
-                )
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/albums/%s/tracks', $id));
+        $request->getQuery()->add('limit', $limit);
+        $request->getQuery()->add('offset', $offset);
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\PaginationHydrator());
@@ -138,13 +143,10 @@ class API
      */
     public function getArtists(array $ids)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', '/v1/artists', array(
-                'query' => array(
-                    'ids' => implode(',', $ids)
-                )
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', '/v1/artists');
+        $request->getQuery()->add('ids', implode(',', $ids));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\ArtistCollectionHydrator());
@@ -154,24 +156,22 @@ class API
 
     /**
      * @param string $id
-     * @param string $country
+     * @param string|null $country
      * @param array $albumTypes
      * @param int $limit
      * @param int $offset
      * @return Entity\AlbumPagination
      */
-    public function getArtistAlbums($id, $country, array $albumTypes, $limit = 20, $offset = 0)
+    public function getArtistAlbums($id, $country = null, array $albumTypes = array(), $limit = 20, $offset = 0)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/albums', $id), array(
-                'query' => array(
-                    'album_type' => implode(',', $albumTypes),
-                    'country' => $country,
-                    'limit' => $limit,
-                    'offset' => $offset
-                )
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/albums', $id));
+        $request->getQuery()->add('album_type', implode(',', $albumTypes));
+        $request->getQuery()->add('country', $country);
+        $request->getQuery()->add('limit', $limit);
+        $request->getQuery()->add('offset', $offset);
+        $request->getQuery()->replace(array_filter($request->getQuery()->toArray()));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\PaginationHydrator());
@@ -187,13 +187,10 @@ class API
      */
     public function getArtistTopTracks($id, $country)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/top-tracks', $id), array(
-                'query' => array(
-                    'country' => $country
-                )
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/artists/%s/top-tracks', $id));
+        $request->getQuery()->add('country', $country);
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\TrackCollectionHydrator());
@@ -241,13 +238,10 @@ class API
      */
     public function getTracks(array $ids)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', '/v1/tracks', array(
-                'query' => array(
-                    'ids' => implode(',', $ids)
-                )
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', '/v1/tracks');
+        $request->getQuery()->add('ids', implode(',', $ids));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\TrackCollectionHydrator());
@@ -286,20 +280,17 @@ class API
     }
 
     /**
-     * @param string $id
      * @param string $userId
+     * @param string $id
      * @param array $fields
      * @return Entity\Playlist
      */
-    public function getPlaylist($id, $userId, array $fields = array())
+    public function getUserPlaylist($userId, $id, array $fields = array())
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s', $userId, $id), array(
-                'query' => array_filter(array(
-                    'fields' => implode(',', $fields)
-                ))
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s', $userId, $id));
+        $request->getQuery()->add('fields', implode(',', array_merge($this->paginationFields, $fields)));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\PlaylistHydrator());
@@ -311,20 +302,17 @@ class API
     }
 
     /**
-     * @param string $id
      * @param string $userId
+     * @param string $id
      * @param array $fields
      * @return Entity\PlaylistTrackPagination
      */
-    public function getPlaylistTracks($id, $userId, array $fields = array())
+    public function getUserPlaylistTracks($userId, $id, array $fields = array())
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s/tracks', $userId, $id), array(
-                'query' => array_filter(array(
-                    'fields' => implode(',', $fields)
-                ))
-            ))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists/%s/tracks', $userId, $id));
+        $request->getQuery()->add('fields', implode(',', array_merge($this->paginationFields, $fields)));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\PaginationHydrator());
@@ -339,9 +327,9 @@ class API
      */
     public function getUserPlaylists($id)
     {
-        $response = $this->sendRequest(
-            $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists', $id))
-        )->json();
+        $request = $this->guzzleClient->createRequest('GET', sprintf('/v1/users/%s/playlists', $id));
+
+        $response = $this->sendRequest($request)->json();
 
         $hydrators = new AggregateHydrator();
         $hydrators->add(new Hydrator\PaginationHydrator());
@@ -351,22 +339,24 @@ class API
     }
 
     /**
-     * @param GuzzleHttp\Message\RequestInterface $request
-     * @return GuzzleHttp\Message\ResponseInterface|null
-     * @throws Exception\AccessTokenExpiredException
+     * @param Guzzle\Http\Message\RequestInterface $request
+     * @return Guzzle\Http\Message\Response|null
+     * @throws Exception\AccessTokenException
      * @throws \Exception
      */
-    private function sendRequest(GuzzleHttp\Message\RequestInterface $request)
+    private function sendRequest(Guzzle\Http\Message\RequestInterface $request)
     {
         try {
             return $this->guzzleClient->send($request);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
+        } catch (Guzzle\Http\Exception\ClientErrorResponseException $e) {
             switch ($e->getResponse()->getStatusCode()) {
                 case 401:
-                    throw new Exception\AccessTokenExpiredException();
+                    throw new Exception\AccessTokenException();
                     break;
                 default:
-                    throw new \Exception(sprintf('A problem occurred: %s', $e->getMessage()));
+                    $hydrator = new Hydrator\ErrorHydrator();
+                    $error = $hydrator->hydrate($e->getResponse()->json(), new Entity\Error());
+                    throw new Exception\SpotifyException($error);
                     break;
             }
         }

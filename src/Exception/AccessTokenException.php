@@ -5,9 +5,9 @@ namespace Audeio\Spotify\Exception;
  * Class AccessTokenExpiredException
  * @package Audeio\Spotify\Exception
  */
-class AccessTokenExpiredException extends \Exception
+class AccessTokenException extends \Exception
 {
 
-    protected $message = 'Access token expired';
+    protected $message = 'There was a problem with your access token';
     protected $code = 401;
 } 

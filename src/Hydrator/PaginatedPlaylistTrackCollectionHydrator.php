@@ -1,6 +1,7 @@
 <?php
 namespace Audeio\Spotify\Hydrator;
 
+use Audeio\Spotify\Entity\Pagination;
 use Audeio\Spotify\Entity\PlaylistTrack;
 use Audeio\Spotify\Entity\PlaylistTrackCollection;
 use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
@@ -15,7 +16,7 @@ class PaginatedPlaylistTrackCollectionHydrator extends ClassMethods
 
     /**
      * @param array $data
-     * @param object $object
+     * @param Pagination $object
      * @return object
      */
     public function hydrate(array $data, $object)
