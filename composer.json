@@ -20,6 +20,7 @@
         "doctrine/collections": "1.*"
     },
     "require-dev": {
+        "vlucas/phpdotenv": "1.*",
         "phpunit/phpunit": "4.*"
     }
 }
