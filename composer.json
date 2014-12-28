@@ -10,9 +10,9 @@
         }
     },
     "require": {
-        "php": ">=5.3",
+        "php": ">=5.4",
         "guzzle/guzzle": "3.*",
-        "league/oauth2-client": "0.*",
+        "league/oauth2-client": "~0.6",
         "zendframework/zend-filter": "2.*",
         "zendframework/zend-eventmanager": "2.*",
         "zendframework/zend-servicemanager": "2.*",

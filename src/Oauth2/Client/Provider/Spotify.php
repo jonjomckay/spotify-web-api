@@ -1,15 +1,15 @@
 <?php
 namespace Audeio\Spotify\Oauth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\IdentityProvider;
-use League\OAuth2\Client\Provider\User;
+use League\OAuth2\Client\Entity\User;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 
 /**
  * Class Spotify
  * @package Audeio\Spotify\Oauth2\Client\Provider
  */
-class Spotify extends IdentityProvider
+class Spotify extends AbstractProvider
 {
 
     public $scopeSeparator = ' ';

@@ -5,7 +5,7 @@ Spotify Web API
 
 ## Requirements
 
-* PHP 5.3+
+* PHP 5.4+
 * An OAuth 2 client ([league/oauth2-client](https://github.com/thephpleague/oauth2-client) works well)
 
 ## Installation
