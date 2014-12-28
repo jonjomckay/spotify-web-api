@@ -42,7 +42,7 @@ class APITest extends \PHPUnit_Framework_TestCase
 
     public function testGetAlbum()
     {
-        $response = $this->api->getAlbum('0sNOF9WDwhWunNAHPD3Baj');
+        $response = $this->api->getAlbum('4lFDt4sVpCni9DRHRmDjgG');
 
         $this->assertInstanceOf('Audeio\Spotify\Entity\Album', $response);
         $this->assertNotNull($response->getAlbumType());
@@ -117,7 +117,7 @@ class APITest extends \PHPUnit_Framework_TestCase
 
     public function testGetArtist()
     {
-        $response = $this->api->getArtist('0LcJLqbBmaGUft1e9Mm8HV');
+        $response = $this->api->getArtist('6jJ0s89eD6GaHleKKya26X');
 
         $this->assertInstanceOf('Audeio\Spotify\Entity\Artist', $response);
         $this->assertNotEmpty($response->getExternalUrls());
@@ -401,7 +401,7 @@ class APITest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Audeio\Spotify\Entity\PlaylistPagination', $response);
         $this->assertNotNull($response->getHref());
         $this->assertSame(0, $response->getItems()->count());
-        $this->assertSame(0, $response->getLimit());
+        $this->assertSame(20, $response->getLimit());
         $this->assertNotNull($response->getOffset());
         $this->assertNotNull($response->getTotal());
     }
