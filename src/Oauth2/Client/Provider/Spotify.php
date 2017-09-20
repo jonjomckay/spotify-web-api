@@ -57,7 +57,7 @@ class Spotify extends AbstractProvider
         $user = new User();
         $user->uid = $response['id'];
         $user->name = $response['display_name'];
-        $user->email = $response['email'];
+        $user->email = !empty($response['email']) ? $response['email'] : null;
         $user->imageUrl = isset($response['images'][0]['url']) ?: null;
         $user->urls = $response['external_urls'];
 
