@@ -53,7 +53,8 @@ class Spotify extends AbstractProvider
         $this->headers = array(
             'Authorization' => sprintf('Bearer %s', $token->accessToken)
         );
-
+        
+        $response = json_decode(json_encode($response), true);
         $user = new User();
         $user->uid = $response['id'];
         $user->name = $response['display_name'];
