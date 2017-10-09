@@ -13,6 +13,13 @@ class Spotify extends AbstractProvider
 {
 
     public $scopeSeparator = ' ';
+    protected $birthdate, $country, $followers, $product;
+
+    const PARAM_BIRTHDATE = 'birthdate';
+    const PARAM_COUNTRY = 'country';
+    const PARAM_FOLLOWERS = 'followers';
+    const PARAM_PRODUCT = 'product';
+    const PRODUCT_PREMIUM = 'premium';
 
     /**
      * @return string
@@ -55,6 +62,7 @@ class Spotify extends AbstractProvider
         );
         
         $response = json_decode(json_encode($response), true);
+        $this->setAdditionalParams($response);
         $user = new User();
         $user->uid = $response['id'];
         $user->name = $response['display_name'];
@@ -63,5 +71,42 @@ class Spotify extends AbstractProvider
         $user->urls = $response['external_urls'];
 
         return $user;
+    }
+    
+    /**
+     * Sets additional parametes being returned from "me" endpoint when additional scopes are available
+     * @param $response
+     */
+    public function setAdditionalParams($response)
+    {
+        $this->birthdate = !empty($response[self::PARAM_BIRTHDATE]) ? $response[self::PARAM_BIRTHDATE] : null;
+        $this->country = !empty($response[self::PARAM_COUNTRY]) ? $response[self::PARAM_COUNTRY] : null;
+        $this->followers = !empty($response[self::PARAM_FOLLOWERS]) ? $response[self::PARAM_FOLLOWERS] : null;
+        $this->product = !empty($response[self::PARAM_PRODUCT]) ? $response[self::PARAM_PRODUCT] : null;
+    }
+    
+    /**
+     * Checks if user has a premium account
+     */
+    public function isPremium()
+    {
+        return ($this->product == self::PRODUCT_PREMIUM);
+    }
+
+    
+    /**
+     * Returns country of user if available
+     */
+    public function country()
+    {
+        return !empty($this->country) ? $this->country : null;
+    }
+    
+    /**
+     * Returns followers if available
+     */
+    public function followers()
+    {
+        return !empty($this->followers) ? $this->followers : null;
     }
 }
